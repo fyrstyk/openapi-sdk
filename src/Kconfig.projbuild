@@ -1,0 +1,166 @@
+menu "Embedded SDK Configuration"
+    config MEDIA_I2S_RX_TX_SHARED
+        bool "I2S RX/TX Shared"
+        default n
+        help
+            If this option is set (not default), 
+            the I2S RX and TX will share the same I2S channel.
+    config MEDIA_I2S_RX_PDM
+        bool "I2S RX PDM"
+        depends on !MEDIA_I2S_RX_TX_SHARED
+        default n
+        help
+            If this option is set (not default), 
+            the I2S RX will use PDM.
+    config MEDIA_I2S_RX_MCLK_PIN
+        int "I2S RX MCLK Pin"
+        default 0
+        help
+            The pin number for I2S RX MCLK.
+    config MEDIA_I2S_RX_BCLK_PIN
+        int "I2S RX BCLK Pin"
+        default 0
+        help
+            The pin number for I2S RX BCLK.
+    config MEDIA_I2S_RX_LRCLK_PIN
+        int "I2S RX LRCLK Pin"
+        default 0
+        help
+            The pin number for I2S RX LRCLK.
+    config MEDIA_I2S_RX_DATA_PIN
+        int "I2S RX DATA Pin"
+        default 0
+        help
+            The pin number for I2S RX DATA.
+    config MEDIA_I2S_TX_MCLK_PIN
+        int "I2S TX MCLK Pin"
+        default 0
+        help
+            The pin number for I2S TX MCLK.
+    config MEDIA_I2S_TX_BCLK_PIN
+        int "I2S TX BCLK Pin"
+        default 0
+        help
+            The pin number for I2S TX BCLK.
+    config MEDIA_I2S_TX_LRCLK_PIN
+        int "I2S TX LRCLK Pin"
+        default 0
+        help
+            The pin number for I2S TX LRCLK.
+    config MEDIA_I2S_TX_DATA_PIN
+        int "I2S TX DATA Pin"
+        default 0
+        help
+            The pin number for I2S TX DATA.
+    config MEDIA_I2S_TX_SLOT_LEFT_ONLY
+        bool "I2S TX Slot Left Only"
+        default n
+        help
+            If this option is set (not default), 
+            the I2S TX will only use the left slot. 
+            Otherwise, it will use both left and right slots.
+    config MEDIA_INIT_MICROPHONE_AND_SPEAKER
+        bool "Init Microphone and Speaker"
+        default n
+        help
+            If this option is set (not default), 
+            the microphone and speaker will be initialized.
+    config MEDIA_ENABLE_DEBUG_AUDIO_UDP_CLIENT
+        bool "Enable Debug Audio UDP Client"
+        default n
+        help
+            if this option is set (not default), 
+            the input/output audio will be sent to the specified host.
+    config MEDIA_DEBUG_AUDIO_HOST
+        string "Debug Audio Host"
+        default "192.168.100.1"
+        depends on MEDIA_ENABLE_DEBUG_AUDIO_UDP_CLIENT
+        help
+            The host to send the audio to for debugging.
+    config MEDIA_DEBUG_AUDIO_IN_PORT
+        int "UDP port to send microphone input audio data to"
+        default 10000
+        depends on MEDIA_ENABLE_DEBUG_AUDIO_UDP_CLIENT
+        help
+            The port to send the audio from microphone to for debugging.
+    config MEDIA_DEBUG_AUDIO_OUT_PORT
+        int "UDP port to send speaker output audio data to"
+        default 10001
+        depends on MEDIA_ENABLE_DEBUG_AUDIO_UDP_CLIENT
+        help
+            The port to send the audio from speaker to for debugging.
+    config USE_WIFI_PROVISIONING_SOFTAP
+        bool "Use SoftAP for WiFi provisioning"
+        default n
+        help
+            Use SoftAP for WiFi provisioning
+    config WIFI_SSID
+        string "WiFi SSID"
+        depends on !USE_WIFI_PROVISIONING_SOFTAP
+        help
+            The SSID of the SoftAP for WiFi
+    config WIFI_PASSWORD
+        string "WiFi Password"
+        depends on !USE_WIFI_PROVISIONING_SOFTAP
+        help
+            The password of the SoftAP for WiFi
+    config OPENAI_API_KEY
+        string "OpenAI API Key"
+        depends on !USE_WIFI_PROVISIONING_SOFTAP
+        help
+            The OpenAI API key
+    config OPENAI_REALTIMEAPI
+        string "OpenAI Realtime API"
+        default "https://api.openai.com/v1/realtime?model=gpt-4o-mini-realtime-preview-2024-12-17"
+        help
+            The OpenAI Realtime API URI
+    config DISABLE_CONFIGURATOR_AFTER_PROVISIONED
+        bool "Disable configurator after provisioned"
+        default n
+        help
+            Disables the configurator HTTP server after OpenAI API key is provisioned.
+    choice BSP_RESET_PROVISIONING
+        prompt "Reset Provisioning Mode"
+        depends on USE_WIFI_PROVISIONING_SOFTAP
+        default BSP_RESET_PROVISIONING_NONE
+        help
+            Reset method of the WiFi and API key provisioning.
+        config BSP_RESET_PROVISIONING_NONE
+            bool None
+        config BSP_RESET_PROVISIONING_GPIO
+            bool GPIO
+    endchoice
+    config BSP_RESET_PROVISIONING_GPIO_NUM
+        int "Reset provisioning GPIO number"
+        depends on BSP_RESET_PROVISIONING_GPIO
+        default 0
+        help
+            GPIO number to detect provisioned WiFi and API key must be reset or not.
+    choice BSP_RESET_PROVISIONING_GPIO_LEVEL
+        prompt "Reset provisioning GPIO level"
+        depends on BSP_RESET_PROVISIONING_GPIO
+        default BSP_RESET_PROVISIONING_GPIO_LEVEL_LOW
+        config BSP_RESET_PROVISIONING_GPIO_LEVEL_HIGH
+            bool "Active High"
+        config BSP_RESET_PROVISIONING_GPIO_LEVEL_LOW
+            bool "Active Low"
+    endchoice
+    config ENABLE_HEAP_MONITOR
+        bool "Enable Heap Monitor"
+        default n
+        help
+            If this option is set (not default), 
+            the heap monitor will be enabled.
+    config HEAP_MONITOR_INTERVAL_MS
+        int "Heap Monitor Interval (ms)"
+        default 1000
+        depends on ENABLE_HEAP_MONITOR
+        help
+            The interval in milliseconds to print the heap monitor.
+    config ENABLE_LOG_DATACHANNEL_MESSAGES
+        bool "Enable Log DataChannel Messages"
+        default n
+        help
+            If this option is set (not default), 
+            the data channel messages will be logged.
+endmenu
